@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+{% block css %}
+<link href={{ url_for('static', filename='css/all.css') }} rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block content %}
+<main>
+  <form action ={{url_for('badrating')}}>
+  <label for = "question">Question: {{question}}</label>
+  <input type = "hidden" id = "question" name = "question" value = "{{question}}">
+  <br>
+  <label for = "answer">Response: {{answer}}</label>
+  <input type = "hidden" id = "answer" name = "answer" value ="{{answer}}">
+  <br>
+  <label for = "rating">Rating: {{rating}}</label>
+  <input type = "hidden" id = "rating" name = "rating" value ="{{rating}}" >
+  <br>
+  <label for="new">What would you have said instead {{username}}: </label>
+  <input type="text" id="new" name="new" ><br><br>
+  <input type="submit" value="Submit" class= "button">
+  </form>
+</main>
+{% endblock %}

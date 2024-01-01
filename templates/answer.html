@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome{% endblock %}
+{% block css %}
+<link href={{ url_for('static', filename='css/intro.css') }} rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block content %}
+
+<form action = {{url_for('another')}}>
+  <label for = "question">Question: {{question}}</label>
+  <input type = "hidden" id = "question" name = "question" value = "{{question}}">
+  <label for = "question">What would you respond to {{question}}: </label>
+  <input type = "text" id = "new" name = "new">
+  <input type="submit" value="Click here to go back home" class= "button">
+  </form>
+{% endblock %}

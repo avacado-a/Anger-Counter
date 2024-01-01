@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+{% block css %}
+<link href={{ url_for('static', filename='css/all.css') }} rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block content %}
+<main>
+  <p>The chat bot hasen't faced this situation before.</p>
+  <form action ={{url_for('noresponse')}}>
+  <label for = "question">Question: {{question}}</label>
+  <input id = "question" name = "question" value = "{{question}}" type = "hidden">
+  <br>
+  <label>We found no response to {{question}} {{username}}</label>
+  <br>
+  <input type="submit" value="Continue" class= "button">
+  </form>
+</main>
+<script src={{ url_for('static', filename='js/home.js') }}></script>
+{% endblock %}

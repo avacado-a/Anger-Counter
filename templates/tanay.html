@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome{% endblock %}
+{% block css %}
+<link href={{ url_for('static', filename='css/intro.css') }} rel="stylesheet" type="text/css" />
+
+{% endblock %}
+
+{% block content %}
+
+<h1>Tanay's score(add one for bad and take one away for good): {{scores}}</h1>
+<form action ={{url_for('tanay')}}>
+  <input type = "hidden" id = "scores" name = "scores" value = "1">
+  <input type="submit" value="+" class= "button">
+  </form>
+<form action ={{url_for('tanay')}}>
+  <input type = "hidden" id = "scores" name = "scores" value = "-1">
+  <input type="submit" value="-" class= "button">
+  </form>
+<br>
+<form action ={{url_for('home')}}>
+  <input type="submit" value="Back Home" class= "button">
+  </form>
+{% endblock %}

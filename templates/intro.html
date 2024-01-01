@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome{% endblock %}
+{% block css %}
+<link href={{ url_for('static', filename='css/intro.css') }} rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block content %}
+
+<h1>WELCOME TO TeachMe, <u><a href="https://replit.com/@{{username}}">{{username}}</a></u></h1>
+<span class="credits">Made by <a href="https://replit.com/@sparik7633" target="_blank">sparik7633</a>, <a href="https://replit.com/@PyGrammer5" target="_blank">PyGrammer5</a>, <a href="https://replit.com/@VincentBruzzi" target="_blank">Vincent Bruzzi</a>, and <a href="https://replit.com/@NeoProz" target="_blank">NeoProz</a></span>
+<form action ={{url_for('login')}}>
+  <input type="hidden" id="sign" name="sign" value="True">
+  <input type="submit" value="Click here to sign in to a different account" class= "button">
+  </form>
+
+<div class="info">
+  <p class="backstory">TeachMe is a chat bot that responds to the input given to it.*
+</div>
+<h6>*Do not put any personal info into the chatbot as it may give other people your personal info**</h6>
+<h6>**We are not liable for any legal damage caused by this project.</h6>
+<br><br>
+
+<a href={{ url_for('bot') }}><button>Click here to use TeachMe</button></a>
+<a href={{ url_for('answer') }}> 
+
+<!--<button>Click here to answer questions</button></a> -->
+{% endblock %}
