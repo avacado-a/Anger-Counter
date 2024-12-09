@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, abort
 import flask as werkzeug
-from replit import db
 from os import environ
 import random
 from random import choice
@@ -10,9 +9,11 @@ import os
 from matplotlib.figure import Figure
 import base64
 from io import BytesIO
-
-
+file = open("save.txt","r")
+db = eval(file.read())
+file.close()
 def plotsave():
+  global db
   db["saveS"][int(time.strftime("%Y%m"))] = db["scoreS"]
   db["saveT"][int(time.strftime("%Y%m"))] = db["scoreT"]
   db["saveS"] = dict(sorted(db["saveS"].items()))
@@ -30,6 +31,7 @@ def isinmonth(lastsecepoch):
       return True
   return False
 def check():
+  global db
   if not isinmonth(db["time"]):
     db["saveS"][int(time.strftime("%Y%m"))] = db["scoreS"]
     db["saveT"][int(time.strftime("%Y%m"))] = db["scoreT"]
@@ -93,12 +95,14 @@ def home():
 
 @app.route("/sidh")
 def sidh():
+  global db
   score = int(request.args.get('scores',0))
   db["scoreS"] += score
   print(db["scoreS"])
   return render_template("sidh.html", scores = db["scoreS"])
 @app.route("/tanay")
 def tanay():
+  global db
   score = int(request.args.get('scores',0))
   db["scoreT"] += score
   print(db["scoreT"])
