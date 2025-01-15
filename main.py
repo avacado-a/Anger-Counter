@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, abort
+from flask import Flask, render_template, request, redirect, url_for, abort, jsonify, send_file
 import flask as werkzeug
 from os import environ
 import random
@@ -16,8 +16,8 @@ def plotsave():
   global db
   db["saveS"][int(time.strftime("%Y%m"))] = db["scoreS"]
   db["saveT"][int(time.strftime("%Y%m"))] = db["scoreT"]
-  db["saveS"] = dict(sorted(db["saveS"].items()))
-  db["saveS"] = dict(sorted(db["saveS"].items()))
+  # db["saveS"] = dict(sorted(db["saveS"].items()))
+  # db["saveS"] = dict(sorted(db["saveS"].items()))
   xS = [i for i in list(db["saveS"])]
   yS = [db["saveS"][i] for i in list(db["saveS"])]
   xT = [i for i in list(db["saveT"])]
@@ -45,6 +45,86 @@ app = Flask(__name__)
 def before_request():
   time.sleep(0.5)
 
+@app.route('/capture', methods=['POST'])
+def capture():
+    image_data = request.files['image'].read()
+    cv2_image = cv2.imdecode(np.frombuffer(image_data, dtype=np.uint8), cv2.IMREAD_COLOR)
+    cv2.imwrite("src/static/letsgo.png",cv2_image)
+    return jsonify({'success': True})
+
+@app.route('/show')
+def show():
+    return send_file("/workspaces/Web-Based-Webcam/src/static/letsgo.png")
+
+@app.route('/hello')
+def hello_world():
+    return """
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" type="image/png" href="/static/lgo.png"> 
+</head>
+<body>
+    <video id="video" autoplay></video>
+    <canvas id="canvas" width="640" height="480"></canvas>
+    <script>
+        let video = document.getElementById('video');
+        let canvas = document.getElementById('canvas');
+        let bounded = document.getElementById('bounded');
+        let detection = document.getElementById('detection');
+        var width = 640;
+        var height = 480;
+        navigator.mediaDevices.getUserMedia({
+                    video: {
+                        width: { ideal: 4000 },//{ ideal: 1920 },
+                        height: { ideal: 4000 },//{ ideal: 1080 }
+                        facingMode: { exact: "user" }
+                    }
+                })
+                .then(function(stream) {
+                video.srcObject = stream;
+                video.onloadedmetadata = () => {
+                    width = video.videoWidth;
+                    height = video.videoHeight;
+                    video.width = width.toString();
+                    video.height = height.toString();
+                    canvas.width = width.toString();
+                    canvas.height = height.toString();
+                    console.log(`Webcam image size: ${width} x ${height}`);
+                };
+            })
+            .catch(function(error) {
+                console.error('Error accessing media devices.', error);
+            });
+        function check() {
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            canvas.toBlob(function(blob) {
+                const formData = new FormData();
+                formData.append('image', blob, 'letsgo.png'); // Adjust filename as needed
+                fetch('/capture', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        console.log('Image saved successfully!');
+                    } else {
+                        console.log('Error saving image');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error sending image:', error);
+                });
+            });
+        }
+        var t=setInterval(check,1000*0.05);
+    </script>
+</body>
+</html>"""
 
 @app.route("/")
 def home():
@@ -84,8 +164,8 @@ def home():
     <body>
   <h1>Anger Counter</h1>
   <h3>Has Sidh or Tanay made you angry or done something nice today. Use their monthly counter and see who done more for or agianst you.</h3>
-  <a href=https://anger-counter.sparik7633.repl.co/sidh?score=0><button>SIDH</button></a>
-  <a href=https://anger-counter.sparik7633.repl.co/tanay?score=0><button>TANAY</button></a>
+  <a href=/sidh?score=0><button>SIDH</button></a>
+  <a href=/tanay?score=0><button>TANAY</button></a>
   <h2>Sidh:</h2>
   <img src='data:image/png;base64,{data}'/>
   <h2>Tanay:</h2>
